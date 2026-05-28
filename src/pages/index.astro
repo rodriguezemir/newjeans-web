@@ -1,5 +1,14 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Hero from "../components/Hero.astro";
+import Footer from "../components/Footer.astro";
 ---
 
-<Layout title="NewJeans - Minecraft Server of the Sword PvP [1.21+]" />
+<Layout title="NewJeans - Minecraft Server of the Sword PvP [1.21+]">
+  <Header />
+  <main class="pt-20">
+    <Hero />
+  </main>
+  <Footer />
+</Layout>
