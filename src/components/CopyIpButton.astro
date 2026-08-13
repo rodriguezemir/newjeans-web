@@ -1,0 +1,20 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className = "" } = Astro.props;
+---
+
+<button
+  type="button"
+  data-copy-ip
+  data-label-idle="Copiar IP"
+  data-label-done="¡IP copiada!"
+  class:list={[
+    "cursor-pointer rounded-xl bg-linear-[150deg] from-ice to-beam px-5.5 py-3 text-sm font-extrabold tracking-[.4px] text-deep shadow-[0_8px_26px_rgba(76,123,255,.35)] transition hover:brightness-110",
+    className,
+  ]}
+>
+  <span data-copy-label>Copiar IP</span>
+</button>

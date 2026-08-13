@@ -1,0 +1,143 @@
+---
+import { POSTS } from "../data/posts";
+---
+
+<section
+  id="blog"
+  class="bg-linear-to-b from-night-900 to-night-850 px-5 py-25 md:px-10"
+>
+  <div class="mx-auto max-w-[1180px]">
+    <div
+      class="mb-10 flex flex-wrap items-end justify-between gap-6"
+      data-reveal-heading
+    >
+      <div>
+        <p
+          class="mb-3 text-[13px] font-extrabold tracking-[1.6px] text-ice uppercase"
+        >
+          Blog
+        </p>
+        <h2
+          class="text-[34px] font-black tracking-[-1.1px] md:text-[46px] md:tracking-[-1.6px]"
+        >
+          Novedades y guías
+        </h2>
+      </div>
+      <p class="max-w-[360px] leading-relaxed text-ink-400">
+        Changelogs, resultados de torneos y guías de PvP escritas por el staff.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-5">
+      {
+        POSTS.map((post) => (
+          <article
+            data-reveal-card
+            class="flex flex-col overflow-hidden rounded-[22px] border border-white/8 bg-night-800 transition duration-300 hover:-translate-y-1 hover:border-ice/45"
+          >
+            <button
+              type="button"
+              data-post-open={post.slug}
+              class="flex flex-1 cursor-pointer flex-col text-left"
+            >
+              <span
+                class:list={["flex h-[150px] w-full items-end p-4.5", post.cover]}
+              >
+                <span class="rounded-lg bg-night-900/70 px-2.75 py-1 text-[11.5px] font-extrabold tracking-[1px] text-ice uppercase">
+                  {post.category}
+                </span>
+              </span>
+              <span class="flex flex-1 flex-col gap-3 p-6.5">
+                <span class="font-mono text-[12.5px] text-ink-500">
+                  <time datetime={post.datetime}>{post.date}</time> ·{" "}
+                  {post.readingTime}
+                </span>
+                <span class="text-[21px] leading-snug font-extrabold tracking-[-.6px]">
+                  {post.title}
+                </span>
+                <span class="flex-1 text-[14.5px] leading-relaxed text-ink-400">
+                  {post.excerpt}
+                </span>
+                <span class="text-[13px] font-extrabold tracking-[1px] text-ice uppercase">
+                  Leer nota →
+                </span>
+              </span>
+            </button>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+{
+  POSTS.map((post) => (
+    <dialog
+      id={`post-${post.slug}`}
+      data-post-dialog
+      aria-labelledby={`post-title-${post.slug}`}
+      class="m-auto max-h-[80vh] w-[calc(100%-2.5rem)] max-w-[720px] overflow-y-auto rounded-3xl border border-ice/25 bg-night-800 text-ink-50 shadow-[0_40px_100px_rgba(0,0,0,.6)] backdrop:bg-night-900/80 backdrop:backdrop-blur-[6px]"
+    >
+      <div class:list={["h-40", post.cover]} />
+      <div class="px-6 pt-8 pb-10 md:px-10">
+        <div class="mb-3.5 flex flex-wrap items-center gap-3">
+          <span class="rounded-lg bg-ice/12 px-2.75 py-1 text-[11.5px] font-extrabold tracking-[1px] text-ice uppercase">
+            {post.category}
+          </span>
+          <span class="font-mono text-[12.5px] text-ink-500">{post.date}</span>
+        </div>
+        <h2
+          id={`post-title-${post.slug}`}
+          class="mb-4.5 text-[26px] leading-tight font-black tracking-[-1.2px] md:text-[32px]"
+        >
+          {post.title}
+        </h2>
+        <div class="text-base leading-[1.75] whitespace-pre-line text-ink-200">
+          {post.body}
+        </div>
+        <button
+          type="button"
+          data-post-close
+          class="mt-7 cursor-pointer rounded-xl border border-ice/30 bg-ice/10 px-6 py-3.5 text-sm font-extrabold text-ice transition hover:bg-ice/18"
+        >
+          Cerrar
+        </button>
+      </div>
+    </dialog>
+  ))
+}
+
+<script>
+  const dialogs =
+    document.querySelectorAll<HTMLDialogElement>("dialog[data-post-dialog]");
+
+  document
+    .querySelectorAll<HTMLButtonElement>("[data-post-open]")
+    .forEach((trigger) => {
+      trigger.addEventListener("click", () => {
+        const dialog = document.getElementById(
+          `post-${trigger.dataset.postOpen}`,
+        );
+        if (dialog instanceof HTMLDialogElement) {
+          dialog.showModal();
+          document.body.classList.add("overflow-hidden");
+        }
+      });
+    });
+
+  dialogs.forEach((dialog) => {
+    // El click cae en el <dialog> sólo cuando fue sobre el backdrop:
+    // el contenido va a pantalla completa dentro suyo.
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+
+    dialog
+      .querySelector("[data-post-close]")
+      ?.addEventListener("click", () => dialog.close());
+
+    dialog.addEventListener("close", () => {
+      document.body.classList.remove("overflow-hidden");
+    });
+  });
+</script>
