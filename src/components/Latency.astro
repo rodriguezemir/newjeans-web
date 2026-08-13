@@ -1,0 +1,40 @@
+---
+import { LATENCY } from "../data/modes";
+---
+
+<section class="bg-night-900 px-5 py-20 md:px-10">
+  <div
+    class="mx-auto flex max-w-[1180px] flex-wrap items-center justify-between gap-10 rounded-[26px] border border-beam/35 bg-linear-[120deg] from-night-600 to-night-800 px-7 py-9 md:px-12 md:py-11"
+    data-reveal
+  >
+    <div class="max-w-[560px]">
+      <h2
+        class="mb-3 text-[30px] font-black tracking-[-1.1px] md:text-[38px] md:tracking-[-1.4px]"
+      >
+        Ping bajo en toda LatAm
+      </h2>
+      <p class="leading-relaxed text-ink-300">
+        Nodos en Santiago de Chile y São Paulo con ruteo anycast. Medido desde
+        clientes reales en la última semana.
+      </p>
+    </div>
+
+    <dl
+      class="grid min-w-[300px] flex-1 grid-cols-[repeat(auto-fit,minmax(110px,1fr))] gap-6.5"
+    >
+      {
+        LATENCY.map((node) => (
+          <div class="flex flex-col-reverse gap-1">
+            <dt class="text-[13px] font-bold text-ink-400">{node.country}</dt>
+            <dd
+              class:list={["font-mono text-[26px] font-bold", node.tone]}
+              data-countup
+            >
+              {node.ms}
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>

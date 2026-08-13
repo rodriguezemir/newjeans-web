@@ -1,0 +1,109 @@
+---
+import { MODES, type ModeAccent } from "../data/modes";
+
+const ACCENT: Record<
+  ModeAccent,
+  { card: string; glow: string; cmd: string; tag: string }
+> = {
+  ice: {
+    card: "from-night-700 to-night-800 border-ice/15 hover:border-ice/50",
+    glow: "from-ice/30",
+    cmd: "text-ice",
+    tag: "bg-ice/10 text-ice-soft",
+  },
+  flare: {
+    card: "from-tint-flare to-night-800 border-flare/20 hover:border-flare/55",
+    glow: "from-flare/28",
+    cmd: "text-flare-soft",
+    tag: "bg-flare/12 text-flare-light",
+  },
+  mint: {
+    card: "from-tint-mint to-night-800 border-mint/20 hover:border-mint/50",
+    glow: "from-mint/26",
+    cmd: "text-mint",
+    tag: "bg-mint/12 text-mint-soft",
+  },
+  nova: {
+    card: "from-tint-nova to-night-800 border-nova/20 hover:border-nova/55",
+    glow: "from-nova/26",
+    cmd: "text-nova",
+    tag: "bg-nova/12 text-nova-soft",
+  },
+};
+---
+
+<section id="modalidades" class="bg-night-900 px-5 py-25 md:px-10">
+  <div class="mx-auto max-w-[1180px]">
+    <div
+      class="mb-10 flex flex-wrap items-end justify-between gap-6"
+      data-reveal-heading
+    >
+      <div>
+        <p
+          class="mb-3 text-[13px] font-extrabold tracking-[1.6px] text-ice uppercase"
+        >
+          Modalidades
+        </p>
+        <h2
+          class="text-[34px] font-black tracking-[-1.1px] md:text-[46px] md:tracking-[-1.6px]"
+        >
+          Cuatro formas de pelear
+        </h2>
+      </div>
+      <p class="max-w-[380px] leading-relaxed text-ink-400">
+        Todas con kits editables, ELO independiente y colas dedicadas. Elegí la
+        tuya desde el hub.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-5">
+      {
+        MODES.map((mode) => {
+          const accent = ACCENT[mode.accent];
+          return (
+            <article
+              data-mode-card
+              class:list={[
+                "relative overflow-hidden rounded-[22px] border bg-linear-[165deg] p-7.5 transition duration-300 hover:-translate-y-1",
+                accent.card,
+              ]}
+            >
+              <div
+                class:list={[
+                  "pointer-events-none absolute -top-10 -right-10 size-[150px] rounded-full bg-radial to-transparent to-70%",
+                  accent.glow,
+                ]}
+              />
+              <p
+                class:list={[
+                  "font-mono text-xs font-bold tracking-[1px]",
+                  accent.cmd,
+                ]}
+              >
+                {mode.cmd}
+              </p>
+              <h3 class="mt-3.5 mb-2.5 text-[27px] font-extrabold tracking-[-.8px]">
+                {mode.title}
+              </h3>
+              <p class="mb-5 text-[15px] leading-relaxed text-ink-400">
+                {mode.description}
+              </p>
+              <ul class="flex flex-wrap gap-2">
+                {mode.tags.map((tag) => (
+                  <li
+                    class:list={[
+                      "rounded-lg px-2.75 py-1.5 text-[12.5px] font-bold",
+                      accent.tag,
+                    ]}
+                  >
+                    {tag}
+                  </li>
+                ))}
+              </ul>
+            </article>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>
