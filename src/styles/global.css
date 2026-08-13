@@ -2,16 +2,155 @@
 
 @font-face {
   font-family: "Alfa Slab One";
-  src: url("/fonts/AlfaSlabOne-Regular.ttf") format("ttf");
+  src: url("/fonts/AlfaSlabOne-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
+  font-display: swap;
 }
 
 @theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   --font-alfa: "Alfa Slab One", sans-serif;
+
+  /* Superficies, de la más profunda a la más clara */
+  --color-night-950: #070910;
+  --color-night-900: #0a0c12;
+  --color-night-850: #0d111b;
+  --color-night-800: #0e1320;
+  --color-night-750: #111725;
+  --color-night-700: #141c2e;
+  --color-night-650: #16203a;
+  --color-night-600: #1b2340;
+
+  /* Tintes de card por modalidad */
+  --color-tint-flare: #2a1621;
+  --color-tint-mint: #16261c;
+  --color-tint-nova: #221a32;
+
+  /* Rampa de texto */
+  --color-ink-50: #e8eef7;
+  --color-ink-100: #b4c1d3;
+  --color-ink-200: #a9b6c9;
+  --color-ink-300: #9aa8bd;
+  --color-ink-400: #93a2b8;
+  --color-ink-500: #7e8da3;
+  --color-ink-600: #6f7d92;
+  --color-ink-700: #4e5a6b;
+  /* Texto sobre fondos brillantes */
+  --color-deep: #04121b;
+
+  /* Acentos */
+  --color-ice: #7be3ff;
+  --color-ice-soft: #9edff5;
+  --color-ice-light: #b9f1ff;
+  --color-beam: #4c7bff;
+  --color-mint: #5be58a;
+  --color-mint-soft: #8fefb1;
+  --color-flare: #ff5c8a;
+  --color-flare-soft: #ff7fa6;
+  --color-flare-light: #ffa8c3;
+  --color-flare-pale: #ffd0df;
+  --color-nova: #c79bff;
+  --color-nova-soft: #d8beff;
+  --color-nova-pale: #eee1ff;
+  --color-gold: #ffd166;
+  --color-gold-pale: #ffe3a3;
+
+  --animate-nj-pulse: nj-pulse 1.8s ease-in-out infinite;
+  --animate-nj-float: nj-float 6s ease-in-out infinite;
 }
 
-body {
-  background-color: #0e0e0e;
-  color: white;
+@keyframes nj-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(0.75);
+  }
+}
+
+@keyframes nj-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+/* Halo azul del hero sobre el degradé de fondo */
+@utility bg-hero-aura {
+  background:
+    radial-gradient(
+      900px 500px at 50% -12%,
+      rgba(76, 123, 255, 0.32),
+      transparent 70%
+    ),
+    linear-gradient(180deg, #0d111b, #0a0c12);
+}
+
+/* Grilla técnica del hero, desvanecida hacia los bordes */
+@utility bg-hero-grid {
+  background-image:
+    linear-gradient(rgba(123, 227, 255, 0.35) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(123, 227, 255, 0.35) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(700px 380px at 50% 15%, #000, transparent);
+  mask-image: radial-gradient(700px 380px at 50% 15%, #000, transparent);
+}
+
+/* El logo viene en negro sobre transparente: lo invertimos a blanco */
+@utility logo-njz {
+  filter: invert(1) contrast(1.15) brightness(1.15);
+  mix-blend-mode: screen;
+}
+
+/* Misma inversión que logo-njz, con el halo celeste del hero. Va en una sola
+   declaración de filter porque las utilidades drop-shadow-* de Tailwind
+   pisarían el invert(). */
+@utility logo-njz-glow {
+  filter: invert(1) contrast(1.2) brightness(1.2)
+    drop-shadow(0 0 34px rgba(123, 227, 255, 0.45));
+  mix-blend-mode: screen;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Sin JS el ancla igual queda debajo del header sticky */
+  [id] {
+    scroll-margin-top: 5rem;
+  }
+
+  body {
+    background-color: var(--color-night-900);
+    color: var(--color-ink-50);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: var(--color-ice);
+    color: var(--color-night-900);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }

@@ -2,13 +2,92 @@
 import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
+import Modes from "../components/Modes.astro";
+import Tops from "../components/Tops.astro";
+import Store from "../components/Store.astro";
+import Blog from "../components/Blog.astro";
+import Latency from "../components/Latency.astro";
+import Faq from "../components/Faq.astro";
 import Footer from "../components/Footer.astro";
+import { SITE } from "../data/site";
+import { FAQS } from "../data/faqs";
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "VideoGameServer",
+      "@id": `${SITE.url}/#server`,
+      name: SITE.name,
+      url: `${SITE.url}/`,
+      playMode: "MultiPlayer",
+      serverStatus: "Online",
+      description:
+        "Servidor de Minecraft PvP para Latinoamérica con Practice, FFA Sword, UHC y NetheritePot. IP: newjeans.lat",
+      gameServer: SITE.ip,
+      inLanguage: "es",
+      areaServed: ["AR", "CL", "CO", "PE", "419"],
+    },
+    {
+      "@type": "Organization",
+      "@id": `${SITE.url}/#org`,
+      name: SITE.name,
+      url: `${SITE.url}/`,
+      logo: `${SITE.url}${SITE.logo}`,
+      sameAs: [SITE.discord],
+      areaServed: "Latinoamérica",
+    },
+    {
+      "@type": "WebSite",
+      url: `${SITE.url}/`,
+      name: SITE.name,
+      inLanguage: "es-419",
+    },
+    {
+      // Se arma desde el mismo array que renderiza la sección FAQ, así el
+      // marcado nunca se despega de lo que ve el usuario.
+      "@type": "FAQPage",
+      mainEntity: FAQS.map((faq) => ({
+        "@type": "Question",
+        name: faq.q,
+        acceptedAnswer: { "@type": "Answer", text: faq.a },
+      })),
+    },
+  ],
+};
 ---
 
-<Layout title="NewJeans - Minecraft Server of the Sword PvP [1.21+]">
+<Layout
+  title="NewJeans — Servidor de Minecraft PvP en LatAm | IP: newjeans.lat"
+  description="NewJeans es un servidor de Minecraft PvP para LatAm con Practice, FFA Sword, UHC y NetheritePot. Entrá con la IP newjeans.lat — 1.8 a 1.21, ping bajo en Argentina, Chile, Colombia y Perú."
+  keywords="servidor de minecraft pvp, practice minecraft latam, ffa sword, uhc, netheritepot, newjeans.lat, servidor pvp argentina, servidor pvp chile, servidor pvp colombia"
+  ogTitle="NewJeans — Servidor de Minecraft PvP | newjeans.lat"
+  ogDescription="Practice, FFA Sword, UHC y NetheritePot. Ping bajo en toda LatAm. IP: newjeans.lat"
+>
+  <script
+    slot="head"
+    is:inline
+    type="application/ld+json"
+    set:html={JSON.stringify(structuredData)}
+  />
+
   <Header />
-  <main class="pt-20">
+
+  <main>
     <Hero />
+    <Modes />
+    <Tops />
+    <Store />
+    <Blog />
+    <Latency />
+    <Faq />
   </main>
+
   <Footer />
 </Layout>
+
+<script>
+  import "../scripts/copy-ip";
+  import "../scripts/online";
+  import "../scripts/motion";
+</script>
