@@ -1,0 +1,6 @@
+# pnpm 11 pide aprobar los scripts de instalación de cada dependencia.
+# Los dos bajan/enlazan binarios nativos y sin ellos no compila el proyecto:
+# esbuild lo usa Vite para transpilar y sharp lo usa Astro para las imágenes.
+allowBuilds:
+  esbuild: true
+  sharp: true
