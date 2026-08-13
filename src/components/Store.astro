@@ -1,0 +1,150 @@
+---
+import { SITE } from "../data/site";
+import { RANKS, EXTRAS, type RankAccent, type Extra } from "../data/store";
+
+const RANK_ACCENT: Record<RankAccent, { title: string; cta: string }> = {
+  ice: {
+    title: "text-ice",
+    cta: "border-ice/30 bg-ice/10 text-ice hover:bg-ice/18 hover:text-ice-light",
+  },
+  nova: {
+    title: "text-nova",
+    cta: "border-transparent bg-linear-[120deg] from-ice to-beam text-deep hover:brightness-110",
+  },
+  gold: {
+    title: "text-gold",
+    cta: "border-gold/35 bg-gold/10 text-gold hover:bg-gold/18 hover:text-gold-pale",
+  },
+};
+
+const EXTRA_ACCENT: Record<Extra["accent"], { card: string; cta: string }> = {
+  nova: {
+    card: "from-tint-nova border-nova/20",
+    cta: "border-nova/40 bg-nova/14 text-nova-soft hover:bg-nova/24 hover:text-nova-pale",
+  },
+  flare: {
+    card: "from-tint-flare border-flare/20",
+    cta: "border-flare/40 bg-flare/14 text-flare-light hover:bg-flare/24 hover:text-flare-pale",
+  },
+};
+---
+
+<section id="tienda" class="bg-night-900 px-5 py-25 md:px-10">
+  <div class="mx-auto max-w-[1180px]">
+    <div class="mb-11 text-center" data-reveal-heading>
+      <p
+        class="mb-3 text-[13px] font-extrabold tracking-[1.6px] text-ice uppercase"
+      >
+        Tienda
+      </p>
+      <h2
+        class="mb-3 text-[34px] font-black tracking-[-1.1px] md:text-[46px] md:tracking-[-1.6px]"
+      >
+        Apoyá el servidor
+      </h2>
+      <p class="text-ink-400">
+        Nada de la tienda da ventaja en combate. Mercado Pago, PayPal y tarjeta.
+      </p>
+    </div>
+
+    <div
+      class="mb-5 grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-5"
+    >
+      {
+        RANKS.map((rank) => {
+          const accent = RANK_ACCENT[rank.accent];
+          return (
+            <div
+              data-reveal-card
+              class:list={[
+                "relative rounded-[22px] p-8 transition duration-300 hover:-translate-y-1",
+                rank.featured
+                  ? "border-[1.5px] border-beam bg-linear-[170deg] from-night-650 to-night-800 shadow-[0_20px_60px_rgba(76,123,255,.2)]"
+                  : "border border-white/8 bg-night-800 hover:border-ice/40",
+              ]}
+            >
+              {rank.featured && (
+                <span class="absolute -top-3.5 left-8 rounded-lg bg-linear-[120deg] from-ice to-beam px-3 py-1.5 text-[11.5px] font-black tracking-[1px] text-deep uppercase">
+                  Más elegido
+                </span>
+              )}
+
+              <p class="text-[13px] font-extrabold tracking-[1.4px] text-ink-400 uppercase">
+                Rango
+              </p>
+              <h3
+                class:list={[
+                  "mt-2 mb-1 text-3xl font-black tracking-[-1px]",
+                  accent.title,
+                ]}
+              >
+                {rank.name}
+              </h3>
+              <p class="mb-5 flex items-baseline gap-1.5">
+                <span class="font-mono text-[34px] font-bold text-white">
+                  {rank.price}
+                </span>
+                <span class="text-sm text-ink-500">USD · pago único</span>
+              </p>
+
+              <ul class="mb-6.5 flex flex-col gap-2.5 text-[15px] text-ink-200">
+                {rank.perks.map((perk) => (
+                  <li>{perk}</li>
+                ))}
+              </ul>
+
+              <a
+                href={SITE.store}
+                target="_blank"
+                rel="noopener"
+                class:list={[
+                  "block rounded-xl border py-3.5 text-center text-[15px] font-extrabold transition",
+                  accent.cta,
+                ]}
+              >
+                Comprar {rank.name}
+              </a>
+            </div>
+          );
+        })
+      }
+    </div>
+
+    <div class="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-5">
+      {
+        EXTRAS.map((extra) => {
+          const accent = EXTRA_ACCENT[extra.accent];
+          return (
+            <div
+              data-reveal-card
+              class:list={[
+                "flex flex-col items-start justify-between gap-5 rounded-[20px] border bg-linear-[120deg] to-night-800 px-7.5 py-6.5 sm:flex-row sm:items-center",
+                accent.card,
+              ]}
+            >
+              <div>
+                <h3 class="mb-1.5 text-[21px] font-extrabold tracking-[-.5px]">
+                  {extra.title}
+                </h3>
+                <p class="max-w-[330px] text-[14.5px] leading-relaxed text-ink-400">
+                  {extra.description}
+                </p>
+              </div>
+              <a
+                href={SITE.store}
+                target="_blank"
+                rel="noopener"
+                class:list={[
+                  "shrink-0 rounded-xl border px-5 py-3 text-sm font-extrabold transition",
+                  accent.cta,
+                ]}
+              >
+                {extra.cta}
+              </a>
+            </div>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>

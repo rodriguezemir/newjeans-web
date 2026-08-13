@@ -1,0 +1,152 @@
+---
+import { TOPS, SKINS, rankColor } from "../data/tops";
+
+const COLS =
+  "grid grid-cols-[44px_1fr_90px] gap-4 md:grid-cols-[70px_1fr_150px_110px]";
+---
+
+<section
+  id="tops"
+  class="bg-linear-to-b from-night-900 to-night-850 px-5 py-25 md:px-10"
+>
+  <div class="mx-auto max-w-[1000px]">
+    <div class="mb-8 text-center" data-reveal-heading>
+      <p
+        class="mb-3 text-[13px] font-extrabold tracking-[1.6px] text-ice uppercase"
+      >
+        Leaderboards
+      </p>
+      <h2
+        class="mb-3 text-[34px] font-black tracking-[-1.1px] md:text-[46px] md:tracking-[-1.6px]"
+      >
+        Tops de la temporada
+      </h2>
+      <p class="text-ink-400">
+        Se actualizan cada 5 minutos · La temporada 3 cierra el 30 de septiembre
+      </p>
+    </div>
+
+    <div
+      role="tablist"
+      aria-label="Métrica del leaderboard"
+      class="mb-6 flex flex-wrap justify-center gap-2.5"
+    >
+      {
+        TOPS.map((board, i) => (
+          <button
+            type="button"
+            role="tab"
+            id={`tab-${board.id}`}
+            aria-controls={`panel-${board.id}`}
+            aria-selected={i === 0 ? "true" : "false"}
+            data-top-tab
+            class="cursor-pointer rounded-xl border border-ice/20 bg-ice/6 px-5.5 py-3 text-sm font-extrabold text-ink-300 transition aria-selected:bg-linear-[120deg] aria-selected:from-ice aria-selected:to-beam aria-selected:text-deep"
+          >
+            {board.tab}
+          </button>
+        ))
+      }
+    </div>
+
+    <div
+      class="relative overflow-hidden rounded-[22px] border border-ice/15 bg-night-800"
+      data-reveal
+    >
+      <div
+        class="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3.5 bg-night-900/45 px-6 text-center backdrop-blur-[7px]"
+      >
+        <p
+          class="rounded-full border border-ice/30 bg-ice/10 px-4 py-1.5 text-[12.5px] font-extrabold tracking-[1.4px] text-ice uppercase"
+        >
+          Temporada 3
+        </p>
+        <p
+          class="text-[28px] font-black tracking-[-1.4px] text-white [text-shadow:0_4px_30px_rgba(0,0,0,.6)] md:text-[38px]"
+        >
+          Próximamente...
+        </p>
+        <p class="max-w-[380px] leading-relaxed text-ink-100">
+          Los leaderboards se publican cuando abra la temporada. Avisamos por
+          Discord.
+        </p>
+      </div>
+
+      {
+        TOPS.map((board, boardIndex) => (
+          <div
+            id={`panel-${board.id}`}
+            role="tabpanel"
+            aria-labelledby={`tab-${board.id}`}
+            hidden={boardIndex !== 0}
+          >
+            <div
+              class:list={[
+                COLS,
+                "bg-ice/5 px-5 py-4 text-xs font-extrabold tracking-[1.2px] text-ink-500 uppercase md:px-6.5",
+              ]}
+            >
+              <div>#</div>
+              <div>Jugador</div>
+              <div class="text-right">{board.metric}</div>
+              <div class="hidden text-right md:block">K/D</div>
+            </div>
+
+            {board.rows.map((row, i) => (
+              <div
+                class:list={[
+                  COLS,
+                  "items-center border-t border-white/5 px-5 py-3.5 transition-colors hover:bg-ice/4 md:px-6.5",
+                ]}
+              >
+                <div
+                  class:list={[
+                    "font-mono text-[17px] font-bold",
+                    rankColor(i),
+                  ]}
+                >
+                  #{i + 1}
+                </div>
+                <div class="flex min-w-0 items-center gap-3">
+                  <div
+                    class:list={[
+                      "size-8 shrink-0 rounded-lg border border-white/10",
+                      SKINS[i % SKINS.length],
+                    ]}
+                  />
+                  <span class="truncate font-bold text-ink-50">{row.name}</span>
+                  <span class="hidden rounded-md bg-ice/10 px-2 py-0.5 text-[11px] font-extrabold tracking-[.8px] text-ice uppercase sm:inline">
+                    {row.tag}
+                  </span>
+                </div>
+                <div class="text-right font-mono text-[17px] font-bold text-white">
+                  {row.value}
+                </div>
+                <div class="hidden text-right font-mono text-[15px] text-ink-400 md:block">
+                  {row.kd}
+                </div>
+              </div>
+            ))}
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  const tabs =
+    document.querySelectorAll<HTMLButtonElement>("[data-top-tab]");
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      tabs.forEach((other) => {
+        const selected = other === tab;
+        other.setAttribute("aria-selected", String(selected));
+
+        const id = other.getAttribute("aria-controls");
+        const panel = id && document.getElementById(id);
+        if (panel) panel.hidden = !selected;
+      });
+    });
+  });
+</script>
