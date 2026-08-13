@@ -1,36 +1,104 @@
 ---
-const online_players = fetch("https://api.mcsrvstat.us/2/newjeans.lat")
-  .then((res) => res.json())
-  .then((data) => data.players.online)
-  .catch(() => "N/A");
+import { SITE } from "../data/site";
+
+const STATS = [
+  { value: "11 ms", label: "Ping AR / CL" },
+  { value: "4", label: "Modalidades" },
+  { value: "99.9%", label: "Uptime" },
+];
 ---
 
-<img
-  src="/hero_bg.gif"
-  alt="Hero Background"
-  class="absolute inset-0 w-full h-full object-cover opacity-50 -z-2"
-/>
 <section
-  class="hero flex flex-col items-center h-screen text-center bg-cover bg-center"
+  id="top"
+  class="bg-hero-aura relative px-5 pt-20 pb-24 text-center md:px-10 md:pt-[110px] md:pb-30"
 >
-  <h1 class="font-black mt-20 text-7xl">
-    Servidor De Minecraft <br />
-    de <span
-      class="bg-linear-to-r from-purple-700 to-yellow-500 bg-clip-text text-transparent"
-      >Sword PvP</span
-    >
-  </h1>
-  <button
-    class="mt-10 px-6 py-3 bg-purple-700 text-white font-bold rounded-lg border-2 border-purple-900 transition-all hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
-  >
-    Join Server
-  </button>
+  <div class="bg-hero-grid absolute inset-0 opacity-15" data-parallax></div>
+
   <div
-    class="bg-purple-700/30 border-2 rounded-2xl p-4 border-purple-700 flex flex-row items-center justify-center space-x-4 mt-10"
+    data-hero
+    class="relative mx-auto flex max-w-[1000px] flex-col items-center gap-6"
   >
-    <h3 class="text-xl font-semibold uppercase text-gray-300">
-      Jugadores Conectados:
-    </h3>
-    <p class="text-xl font-semibold font-mono">{online_players}</p>
+    <img
+      src={SITE.logo}
+      alt="NewJeans NJZ"
+      width="230"
+      height="230"
+      fetchpriority="high"
+      class="logo-njz-glow h-auto w-[170px] animate-nj-float md:w-[230px]"
+    />
+
+    <p
+      class="rounded-full border border-ice/30 bg-ice/7 px-4 py-2 text-[13px] font-bold tracking-[1px] text-ice uppercase"
+    >
+      1.8 → 1.21 · Bedrock compatible · LatAm
+    </p>
+
+    <h1
+      class="text-[44px] leading-[0.98] font-black tracking-[-1.6px] text-balance sm:text-6xl md:text-7xl md:tracking-[-2.6px] lg:text-[84px] lg:leading-[0.95] lg:tracking-[-3.4px]"
+    >
+      El PvP de SA<br />
+      <span
+        class="bg-linear-[100deg] from-ice via-beam via-55% to-nova bg-clip-text text-transparent"
+      >
+        se juega acá
+      </span>
+    </h1>
+
+    <p class="max-w-[620px] text-lg leading-relaxed text-ink-300 text-pretty">
+      Practice, FFA Sword, UHC y NetheritePot en un solo servidor. Nodos en
+      Santiago y São Paulo: 11 ms de ping, cero rollbacks y anticheat propio.
+    </p>
+
+    <div class="mt-1.5 flex flex-wrap items-center justify-center gap-3.5">
+      <button
+        type="button"
+        data-copy-ip
+        data-label-idle="Clic para copiar"
+        data-label-done="Copiada ✓"
+        class="flex cursor-pointer items-center gap-3.5 rounded-2xl border border-ice/30 bg-night-750 px-6 py-4 font-mono text-lg font-bold tracking-[-.5px] text-white transition-colors hover:border-ice hover:bg-night-700 md:text-[22px]"
+      >
+        {SITE.ip}
+        <span
+          data-copy-label
+          class="rounded-lg bg-ice/12 px-2.5 py-1.5 font-sans text-[12.5px] font-extrabold tracking-[1px] text-ice uppercase"
+        >
+          Clic para copiar
+        </span>
+      </button>
+
+      <a
+        href={SITE.discord}
+        target="_blank"
+        rel="noopener"
+        class="rounded-2xl bg-linear-[150deg] from-ice to-beam px-7.5 py-4.5 text-base font-extrabold text-deep shadow-[0_12px_34px_rgba(76,123,255,.35)] transition hover:brightness-110"
+      >
+        Entrar al Discord
+      </a>
+    </div>
+
+    <dl
+      class="mt-11 grid w-full max-w-[860px] grid-cols-2 gap-px overflow-hidden rounded-[18px] border border-ice/15 bg-ice/15 md:grid-cols-4"
+    >
+      {/* flex-col-reverse: el <dt> va primero en el marcado, como manda la
+          spec, pero se ve debajo del valor. */}
+      <div class="flex flex-col-reverse gap-1.5 bg-night-850 px-3 py-6">
+        <dt class="text-[12.5px] font-bold tracking-[1px] text-ink-500 uppercase">
+          Jugando ahora
+        </dt>
+        <dd class="font-mono text-3xl font-bold text-white" data-online>—</dd>
+      </div>
+      {
+        STATS.map((stat) => (
+          <div class="flex flex-col-reverse gap-1.5 bg-night-850 px-3 py-6">
+            <dt class="text-[12.5px] font-bold tracking-[1px] text-ink-500 uppercase">
+              {stat.label}
+            </dt>
+            <dd class="font-mono text-3xl font-bold text-white" data-countup>
+              {stat.value}
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
   </div>
 </section>
