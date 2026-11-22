@@ -1,0 +1,301 @@
+---
+import fs from "node:fs";
+import path from "node:path";
+
+// Las fotos se leen del disco en build time: alcanza con soltarlas en
+// public/galeria y aparecen solas, sin tocar código ni ordenar un array.
+const GALERIA_DIR = path.join(process.cwd(), "public", "galeria");
+const IMAGE_EXTENSIONS = new Set([
+  ".jpg",
+  ".jpeg",
+  ".png",
+  ".webp",
+  ".gif",
+  ".avif",
+]);
+
+const entries = fs.existsSync(GALERIA_DIR)
+  ? fs.readdirSync(GALERIA_DIR, { withFileTypes: true })
+  : [];
+
+const isPhoto = (entry: fs.Dirent) =>
+  entry.isFile() &&
+  IMAGE_EXTENSIONS.has(path.extname(entry.name).toLowerCase());
+
+// Un .heic de iPhone o un .zip se ignorarían en silencio y parecería que la
+// galería está rota. Mejor avisar en el build qué quedó afuera.
+const skipped = entries
+  .filter((entry) => !entry.name.startsWith(".") && !isPhoto(entry))
+  .map((entry) => entry.name);
+
+if (skipped.length > 0) {
+  console.warn(
+    `[galeria] Ignorado en public/galeria (formatos aceptados: ${[...IMAGE_EXTENSIONS].join(", ")}): ${skipped.join(", ")}`,
+  );
+}
+
+const photos = entries
+  .filter(isPhoto)
+  .map((entry) => entry.name)
+  .sort((a, b) => a.localeCompare(b, "es", { numeric: true }))
+  .map((file) => ({
+    src: `/galeria/${encodeURIComponent(file)}`,
+    name: path.parse(file).name.replace(/[-_]+/g, " "),
+  }));
+
+const total = photos.length;
+---
+
+<section id="galeria" class="bg-night-900 px-5 py-25 md:px-10">
+  <div class="mx-auto max-w-[1180px]">
+    <div
+      class="mb-10 flex flex-wrap items-end justify-between gap-6"
+      data-reveal-heading
+    >
+      <div>
+        <p
+          class="mb-3 text-[13px] font-extrabold tracking-[1.6px] text-ice uppercase"
+        >
+          Galería
+        </p>
+        <h2
+          class="text-[34px] font-black tracking-[-1.1px] md:text-[46px] md:tracking-[-1.6px]"
+        >
+          Recuerdos de la comunidad
+        </h2>
+      </div>
+      <p class="max-w-[380px] leading-relaxed text-ink-400">
+        Capturas de las partidas, los meetups y las noches de PvP. Deslizá el
+        carrusel y tocá una foto para verla en grande.
+      </p>
+    </div>
+
+    {
+      total === 0 ? (
+        <p class="rounded-[22px] border border-ice/15 bg-night-850 px-7 py-10 text-center leading-relaxed text-ink-400">
+          {import.meta.env.DEV ? (
+            <>
+              Todavía no hay fotos. Soltá tus capturas en{" "}
+              <code class="font-mono text-[13px] text-ice">public/galeria</code>{" "}
+              (jpg, png, webp, gif o avif) y aparecen acá.
+            </>
+          ) : (
+            <>Todavía no hay fotos. Volvé pronto.</>
+          )}
+        </p>
+      ) : (
+        <div data-galeria>
+          <div
+            data-galeria-track
+            role="region"
+            aria-roledescription="Carrusel"
+            tabindex="0"
+            aria-label={`Carrusel de ${total} fotos de la comunidad`}
+            class="galeria-track flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ice focus-visible:ring-inset"
+          >
+            {photos.map((photo, index) => (
+              <button
+                type="button"
+                data-galeria-item
+                data-src={photo.src}
+                data-name={photo.name}
+                aria-label={`Ampliar foto ${index + 1} de ${total}`}
+                class="group relative aspect-video w-[78%] shrink-0 snap-start overflow-hidden rounded-[22px] border border-ice/15 bg-night-850 transition duration-300 hover:border-ice/45 focus-visible:border-ice focus-visible:ring-2 focus-visible:ring-ice focus-visible:ring-offset-2 focus-visible:ring-offset-night-900 focus-visible:outline-none sm:w-[46%] lg:w-[32%]"
+              >
+                <img
+                  src={photo.src}
+                  alt=""
+                  loading={index < 3 ? "eager" : "lazy"}
+                  decoding="async"
+                  class="size-full object-cover transition duration-500 group-hover:scale-[1.03]"
+                />
+                <span class="pointer-events-none absolute inset-0 bg-linear-to-t from-night-950/75 via-transparent to-transparent opacity-0 transition duration-300 group-hover:opacity-100" />
+                <span class="pointer-events-none absolute right-3 bottom-3 rounded-full bg-night-950/85 px-2.5 py-1 text-[11.5px] font-bold tracking-[.4px] text-ice-soft uppercase opacity-0 transition duration-300 group-hover:opacity-100">
+                  Ver
+                </span>
+              </button>
+            ))}
+          </div>
+
+          <div class="mt-5 flex items-center justify-between gap-4">
+            <p
+              data-galeria-counter
+              class="font-mono text-xs font-bold tracking-[1px] text-ink-600"
+            >
+              1 / {total}
+            </p>
+            <div class="flex gap-2">
+              <button
+                type="button"
+                data-galeria-prev
+                aria-label="Foto anterior"
+                class="grid size-11 place-items-center rounded-full border border-ice/20 bg-night-800 text-ink-100 transition hover:border-ice/60 hover:text-ice focus-visible:border-ice focus-visible:ring-2 focus-visible:ring-ice focus-visible:ring-offset-2 focus-visible:ring-offset-night-900 focus-visible:outline-none disabled:opacity-35 disabled:hover:border-ice/20 disabled:hover:text-ink-100"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="size-5"
+                  aria-hidden="true"
+                >
+                  <path d="M15 6l-6 6 6 6" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                data-galeria-next
+                aria-label="Foto siguiente"
+                class="grid size-11 place-items-center rounded-full border border-ice/20 bg-night-800 text-ink-100 transition hover:border-ice/60 hover:text-ice focus-visible:border-ice focus-visible:ring-2 focus-visible:ring-ice focus-visible:ring-offset-2 focus-visible:ring-offset-night-900 focus-visible:outline-none disabled:opacity-35 disabled:hover:border-ice/20 disabled:hover:text-ink-100"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="size-5"
+                  aria-hidden="true"
+                >
+                  <path d="M9 6l6 6-6 6" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <dialog
+            data-galeria-lightbox
+            aria-label="Foto ampliada"
+            aria-describedby="galeria-caption"
+            class="galeria-lightbox max-h-[92vh] w-full max-w-[min(96vw,1400px)] overflow-y-auto border-0 bg-transparent p-0 text-ink-50"
+          >
+            <div class="flex flex-col items-center gap-3" data-galeria-inner>
+              <img
+                data-galeria-full
+                alt=""
+                class="max-h-[62vh] w-auto max-w-full rounded-[20px] border border-ice/20 bg-night-850 object-contain shadow-[0_30px_80px_-20px_rgba(0,0,0,.9)] sm:max-h-[78vh]"
+              />
+              <div
+                class="flex w-full flex-wrap items-center justify-between gap-3 px-1"
+              >
+                <p
+                  id="galeria-caption"
+                  data-galeria-caption
+                  aria-live="polite"
+                  class="text-sm leading-snug text-ink-300"
+                />
+                <div class="ms-auto flex items-center gap-2">
+                  <button
+                    type="button"
+                    data-galeria-lightbox-prev
+                    aria-label="Foto anterior"
+                    class="grid size-10 place-items-center rounded-full border border-ice/20 bg-night-800 text-ink-100 transition hover:border-ice/60 hover:text-ice focus-visible:border-ice focus-visible:ring-2 focus-visible:ring-ice focus-visible:ring-offset-2 focus-visible:ring-offset-night-950 focus-visible:outline-none"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="size-5"
+                      aria-hidden="true"
+                    >
+                      <path d="M15 6l-6 6 6 6" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    data-galeria-lightbox-next
+                    aria-label="Foto siguiente"
+                    class="grid size-10 place-items-center rounded-full border border-ice/20 bg-night-800 text-ink-100 transition hover:border-ice/60 hover:text-ice focus-visible:border-ice focus-visible:ring-2 focus-visible:ring-ice focus-visible:ring-offset-2 focus-visible:ring-offset-night-950 focus-visible:outline-none"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="size-5"
+                      aria-hidden="true"
+                    >
+                      <path d="M9 6l6 6-6 6" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    data-galeria-close
+                    autofocus
+                    aria-label="Cerrar la foto ampliada"
+                    class="grid size-10 place-items-center rounded-full border border-flare/25 bg-flare/10 text-flare-light transition hover:border-flare/60 hover:text-flare focus-visible:border-flare focus-visible:ring-2 focus-visible:ring-flare focus-visible:ring-offset-2 focus-visible:ring-offset-night-950 focus-visible:outline-none"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="size-5"
+                      aria-hidden="true"
+                    >
+                      <path d="M6 6l12 12M18 6L6 18" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </dialog>
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  /* El carrusel se maneja con los botones y el snap, la barra nativa estorba. */
+  .galeria-track {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .galeria-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .galeria-lightbox {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+  }
+
+  .galeria-lightbox::backdrop {
+    background: rgba(7, 9, 16, 0.88);
+    backdrop-filter: blur(6px);
+  }
+
+  .galeria-lightbox[open] {
+    animation: galeria-pop 0.22s ease-out;
+  }
+
+  @keyframes galeria-pop {
+    from {
+      opacity: 0;
+      transform: scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .galeria-lightbox[open] {
+      animation: none;
+    }
+  }
+</style>
