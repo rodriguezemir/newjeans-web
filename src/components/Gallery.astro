@@ -54,7 +54,7 @@ const total = photos.length;
     >
       <div>
         <p
-          class="mb-3 text-[13px] font-extrabold tracking-[1.6px] text-ice uppercase"
+          class="mb-3 text-[13px] font-extrabold tracking-[1.6px] text-red-500 uppercase"
         >
           Galería
         </p>
@@ -64,19 +64,15 @@ const total = photos.length;
           Recuerdos de la comunidad
         </h2>
       </div>
-      <p class="max-w-[380px] leading-relaxed text-ink-400">
-        Capturas de las partidas, los meetups y las noches de PvP. Deslizá el
-        carrusel y tocá una foto para verla en grande.
-      </p>
     </div>
 
     {
       total === 0 ? (
-        <p class="rounded-[22px] border border-ice/15 bg-night-850 px-7 py-10 text-center leading-relaxed text-ink-400">
+        <p class="rounded-[22px] border border-red-500/15 bg-night-850 px-7 py-10 text-center leading-relaxed text-ink-400">
           {import.meta.env.DEV ? (
             <>
               Todavía no hay fotos. Soltá tus capturas en{" "}
-              <code class="font-mono text-[13px] text-ice">public/galeria</code>{" "}
+              <code class="font-mono text-[13px] text-red-500">public/galeria</code>{" "}
               (jpg, png, webp, gif o avif) y aparecen acá.
             </>
           ) : (
@@ -91,7 +87,7 @@ const total = photos.length;
             aria-roledescription="Carrusel"
             tabindex="0"
             aria-label={`Carrusel de ${total} fotos de la comunidad`}
-            class="galeria-track flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ice focus-visible:ring-inset"
+            class="galeria-track flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-inset"
           >
             {photos.map((photo, index) => (
               <button
@@ -100,7 +96,7 @@ const total = photos.length;
                 data-src={photo.src}
                 data-name={photo.name}
                 aria-label={`Ampliar foto ${index + 1} de ${total}`}
-                class="group relative aspect-video w-[78%] shrink-0 snap-start overflow-hidden rounded-[22px] border border-ice/15 bg-night-850 transition duration-300 hover:border-ice/45 focus-visible:border-ice focus-visible:ring-2 focus-visible:ring-ice focus-visible:ring-offset-2 focus-visible:ring-offset-night-900 focus-visible:outline-none sm:w-[46%] lg:w-[32%]"
+                class="group relative aspect-video w-[78%] shrink-0 snap-start overflow-hidden rounded-[22px] border border-red-500/15 bg-night-850 transition duration-300 hover:border-red-500/45 focus-visible:border-red-500 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-night-900 focus-visible:outline-none sm:w-[46%] lg:w-[32%]"
               >
                 <img
                   src={photo.src}
@@ -110,7 +106,7 @@ const total = photos.length;
                   class="size-full object-cover transition duration-500 group-hover:scale-[1.03]"
                 />
                 <span class="pointer-events-none absolute inset-0 bg-linear-to-t from-night-950/75 via-transparent to-transparent opacity-0 transition duration-300 group-hover:opacity-100" />
-                <span class="pointer-events-none absolute right-3 bottom-3 rounded-full bg-night-950/85 px-2.5 py-1 text-[11.5px] font-bold tracking-[.4px] text-ice-soft uppercase opacity-0 transition duration-300 group-hover:opacity-100">
+                <span class="pointer-events-none absolute right-3 bottom-3 rounded-full bg-night-950/85 px-2.5 py-1 text-[11.5px] font-bold tracking-[.4px] text-red-500-soft uppercase opacity-0 transition duration-300 group-hover:opacity-100">
                   Ver
                 </span>
               </button>
@@ -129,7 +125,7 @@ const total = photos.length;
                 type="button"
                 data-galeria-prev
                 aria-label="Foto anterior"
-                class="grid size-11 place-items-center rounded-full border border-ice/20 bg-night-800 text-ink-100 transition hover:border-ice/60 hover:text-ice focus-visible:border-ice focus-visible:ring-2 focus-visible:ring-ice focus-visible:ring-offset-2 focus-visible:ring-offset-night-900 focus-visible:outline-none disabled:opacity-35 disabled:hover:border-ice/20 disabled:hover:text-ink-100"
+                class="grid size-11 place-items-center rounded-full border border-red-500/20 bg-night-800 text-ink-100 transition hover:border-red-500/60 hover:text-red-500 focus-visible:border-red-500 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-night-900 focus-visible:outline-none disabled:opacity-35 disabled:hover:border-red-500/20 disabled:hover:text-ink-100"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -148,7 +144,7 @@ const total = photos.length;
                 type="button"
                 data-galeria-next
                 aria-label="Foto siguiente"
-                class="grid size-11 place-items-center rounded-full border border-ice/20 bg-night-800 text-ink-100 transition hover:border-ice/60 hover:text-ice focus-visible:border-ice focus-visible:ring-2 focus-visible:ring-ice focus-visible:ring-offset-2 focus-visible:ring-offset-night-900 focus-visible:outline-none disabled:opacity-35 disabled:hover:border-ice/20 disabled:hover:text-ink-100"
+                class="grid size-11 place-items-center rounded-full border border-red-500/20 bg-night-800 text-ink-100 transition hover:border-red-500/60 hover:text-red-500 focus-visible:border-red-500 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-night-900 focus-visible:outline-none disabled:opacity-35 disabled:hover:border-red-500/20 disabled:hover:text-ink-100"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -176,7 +172,7 @@ const total = photos.length;
               <img
                 data-galeria-full
                 alt=""
-                class="max-h-[62vh] w-auto max-w-full rounded-[20px] border border-ice/20 bg-night-850 object-contain shadow-[0_30px_80px_-20px_rgba(0,0,0,.9)] sm:max-h-[78vh]"
+                class="max-h-[62vh] w-auto max-w-full rounded-[20px] border border-red-500/20 bg-night-850 object-contain shadow-[0_30px_80px_-20px_rgba(0,0,0,.9)] sm:max-h-[78vh]"
               />
               <div
                 class="flex w-full flex-wrap items-center justify-between gap-3 px-1"
@@ -192,7 +188,7 @@ const total = photos.length;
                     type="button"
                     data-galeria-lightbox-prev
                     aria-label="Foto anterior"
-                    class="grid size-10 place-items-center rounded-full border border-ice/20 bg-night-800 text-ink-100 transition hover:border-ice/60 hover:text-ice focus-visible:border-ice focus-visible:ring-2 focus-visible:ring-ice focus-visible:ring-offset-2 focus-visible:ring-offset-night-950 focus-visible:outline-none"
+                    class="grid size-10 place-items-center rounded-full border border-red-500/20 bg-night-800 text-ink-100 transition hover:border-red-500/60 hover:text-red-500 focus-visible:border-red-500 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-night-950 focus-visible:outline-none"
                   >
                     <svg
                       viewBox="0 0 24 24"
@@ -211,7 +207,7 @@ const total = photos.length;
                     type="button"
                     data-galeria-lightbox-next
                     aria-label="Foto siguiente"
-                    class="grid size-10 place-items-center rounded-full border border-ice/20 bg-night-800 text-ink-100 transition hover:border-ice/60 hover:text-ice focus-visible:border-ice focus-visible:ring-2 focus-visible:ring-ice focus-visible:ring-offset-2 focus-visible:ring-offset-night-950 focus-visible:outline-none"
+                    class="grid size-10 place-items-center rounded-full border border-red-500/20 bg-night-800 text-ink-100 transition hover:border-red-500/60 hover:text-red-500 focus-visible:border-red-500 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-night-950 focus-visible:outline-none"
                   >
                     <svg
                       viewBox="0 0 24 24"
