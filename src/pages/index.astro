@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
+import Gallery from "../components/Gallery.astro";
 import Modes from "../components/Modes.astro";
 import Tops from "../components/Tops.astro";
 import Store from "../components/Store.astro";
@@ -75,12 +76,7 @@ const structuredData = {
 
   <main>
     <Hero />
-    <Modes />
-    <Tops />
-    <Store />
-    <Blog />
-    <Latency />
-    <Faq />
+    <Gallery />
   </main>
 
   <Footer />
@@ -88,6 +84,7 @@ const structuredData = {
 
 <script>
   import "../scripts/copy-ip";
+  import "../scripts/gallery";
   import "../scripts/online";
   import "../scripts/motion";
 </script>
